@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,27 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Fire theme colors
+				fire: {
+					DEFAULT: '#FF4500', // Bright red-orange
+					light: '#FF7F50', // Lighter orange
+					dark: '#B22222', // Firebrick red
+				},
+				alert: {
+					DEFAULT: '#FF9500', // Warning orange
+					light: '#FFB74D', // Light orange
+					dark: '#F57C00', // Dark orange
+				},
+				safe: {
+					DEFAULT: '#4CAF50', // Green
+					light: '#81C784', // Light green
+					dark: '#388E3C', // Dark green
+				},
+				water: {
+					DEFAULT: '#2196F3', // Blue
+					light: '#64B5F6', // Light blue
+					dark: '#1976D2', // Dark blue
 				}
 			},
 			borderRadius: {
@@ -84,11 +106,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-fire': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.6' }
+				},
+				'ripple': {
+					'0%': { transform: 'scale(0.8)', opacity: '1' },
+					'100%': { transform: 'scale(2)', opacity: '0' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-fire': 'pulse-fire 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'ripple': 'ripple 1.5s infinite ease-in-out'
 			}
 		}
 	},
