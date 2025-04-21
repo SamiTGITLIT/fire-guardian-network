@@ -59,12 +59,11 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
     setNotifications(prevNotifications => [newNotification, ...prevNotifications]);
     setUnreadCount(prevCount => prevCount + 1);
 
-    // Show toast notification
+    // Show toast notification - fixed variant to only use "default" or "destructive"
     toast({
       title: notification.title,
       description: notification.message,
-      variant: notification.type === 'alert' ? 'destructive' : 
-               notification.type === 'warning' ? 'default' : 'secondary',
+      variant: notification.type === 'alert' ? 'destructive' : 'default',
     });
   };
 
