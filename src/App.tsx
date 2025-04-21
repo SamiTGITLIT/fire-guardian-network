@@ -11,12 +11,20 @@ import { SensorProvider } from "./context/SensorContext";
 
 import NavBar from "./components/NavBar";
 import AppSidebar from "./components/AppSidebar";
-import Index from "./pages/Index";
 import HomePage from "./pages/HomePage";
+import UserDashboard from "./pages/UserDashboard";
 import LoginPage from "./pages/LoginPage";
+import RoleSelectPage from "./pages/RoleSelectPage";
+import RegisterPage from "./pages/RegisterPage";
 import Education from "./pages/Education";
+import NotificationsPage from "./pages/NotificationsPage";
+import SettingsPage from "./pages/SettingsPage";
 import StationDashboard from "./pages/StationDashboard";
 import MapView from "./pages/MapView";
+import StationNotificationsPage from "./pages/StationNotificationsPage";
+import CommandsPage from "./pages/CommandsPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,13 +41,13 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Redirect fire station users to station dashboard if trying to access user dashboard
-  if (isFireStation && location.pathname === '/') {
+  if (isFireStation && location.pathname === '/dashboard') {
     return <Navigate to="/station" />;
   }
 
   // Redirect regular users to user dashboard if trying to access station dashboard
   if (!isFireStation && currentUser && location.pathname === '/station') {
-    return <Navigate to="/" />;
+    return <Navigate to="/dashboard" />;
   }
 
   return (
@@ -65,6 +73,18 @@ const PrivateRoute = ({ element }: { element: React.ReactNode }) => {
   return <AuthenticatedLayout>{element}</AuthenticatedLayout>;
 };
 
+// Public Layout for public pages with navbar
+const PublicLayout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <NavBar isPublic={true} />
+      <main className="flex-1">
+        {children}
+      </main>
+    </div>
+  );
+};
+
 // The main App component
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -76,16 +96,26 @@ const App = () => (
             <Sonner />
             <Routes>
               {/* Public routes */}
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/" element={<PublicLayout><HomePage /></PublicLayout>} />
+              <Route path="/about" element={<PublicLayout><AboutPage /></PublicLayout>} />
+              <Route path="/contact" element={<PublicLayout><ContactPage /></PublicLayout>} />
+              <Route path="/role-select" element={<PublicLayout><RoleSelectPage /></PublicLayout>} />
+              <Route path="/login" element={<PublicLayout><LoginPage /></PublicLayout>} />
+              <Route path="/register" element={<PublicLayout><RegisterPage /></PublicLayout>} />
               
-              {/* Protected routes */}
-              <Route path="/" element={<PrivateRoute element={<Index />} />} />
+              {/* Protected user routes */}
+              <Route path="/dashboard" element={<PrivateRoute element={<UserDashboard />} />} />
               <Route path="/education" element={<PrivateRoute element={<Education />} />} />
+              <Route path="/notifications" element={<PrivateRoute element={<NotificationsPage />} />} />
+              <Route path="/settings" element={<PrivateRoute element={<SettingsPage />} />} />
+              
+              {/* Protected fire station routes */}
               <Route path="/station" element={<PrivateRoute element={<StationDashboard />} />} />
               <Route path="/map" element={<PrivateRoute element={<MapView />} />} />
+              <Route path="/station-notifications" element={<PrivateRoute element={<StationNotificationsPage />} />} />
+              <Route path="/commands" element={<PrivateRoute element={<CommandsPage />} />} />
               
-              {/* Redirect from root to home for unauthenticated users */}
+              {/* Fallback route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </SensorProvider>

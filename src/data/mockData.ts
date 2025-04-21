@@ -1,4 +1,3 @@
-
 import { User, Sensor, Notification, FireStation, Educational } from '@/types/types';
 
 // Mock Users
@@ -184,7 +183,7 @@ export const stationNotifications: Notification[] = [
   },
 ];
 
-// Mock Educational Content
+// Updated Mock Educational Content
 export const educationalContent: Educational[] = [
   {
     id: 'ed1',
@@ -201,9 +200,18 @@ export const educationalContent: Educational[] = [
         <li><strong>Radiation:</strong> Transfer through electromagnetic waves</li>
       </ul>
       <p>Understanding these principles helps in creating effective fire prevention systems.</p>
+      <h3>Fire Stages</h3>
+      <p>Fires typically progress through four stages:</p>
+      <ol>
+        <li><strong>Incipient:</strong> The beginning stage where smoke may not be visible</li>
+        <li><strong>Growth:</strong> Active flames that spread rapidly</li>
+        <li><strong>Fully Developed:</strong> The hottest and most dangerous phase</li>
+        <li><strong>Decay:</strong> When fuel or oxygen is depleted</li>
+      </ol>
+      <p>Early detection at the incipient stage is crucial for preventing major damage and saving lives.</p>
     `,
-    imageUrl: 'https://source.unsplash.com/random/800x600/?fire',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    imageUrl: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625',
+    videoUrl: 'https://www.youtube.com/embed/IwBiZtfjioU',
     category: 'physics',
   },
   {
@@ -214,12 +222,30 @@ export const educationalContent: Educational[] = [
       <p>Modern smoke detectors use two primary detection methods:</p>
       <h3>Ionization Detectors</h3>
       <p>These contain a small amount of radioactive material that ionizes the air. When smoke enters, it disrupts the ionization and triggers the alarm.</p>
+      <ul>
+        <li>More responsive to flaming fires</li>
+        <li>Uses Americium-241 to create ions</li>
+        <li>Detects invisible particles of combustion</li>
+      </ul>
       <h3>Photoelectric Detectors</h3>
       <p>These use a light source aimed away from a sensor. When smoke enters, it scatters the light beam toward the sensor, triggering the alarm.</p>
+      <ul>
+        <li>More responsive to smoldering fires</li>
+        <li>Better at detecting larger smoke particles</li>
+        <li>Less prone to false alarms from steam and cooking</li>
+      </ul>
       <p>Dual-sensor smoke detectors combine both technologies for optimal protection against both fast-flaming and smoldering fires.</p>
+      <h3>Smart Detection Systems</h3>
+      <p>Modern fire detection systems like Fire Guardian Network use a combination of technologies:</p>
+      <ul>
+        <li>Temperature sensors for heat detection</li>
+        <li>Smoke particle analysis</li>
+        <li>Carbon monoxide detection</li>
+        <li>Machine learning algorithms to reduce false alarms</li>
+      </ul>
     `,
-    imageUrl: 'https://source.unsplash.com/random/800x600/?smoke',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158',
+    videoUrl: 'https://www.youtube.com/embed/DuAeaIcAXtg',
     category: 'technology',
   },
   {
@@ -241,11 +267,121 @@ export const educationalContent: Educational[] = [
         <li>Feel doors for heat before opening</li>
         <li>Never go back inside a burning building</li>
       </ul>
+      <h3>Creating a Home Fire Escape Plan</h3>
+      <ol>
+        <li><strong>Draw a floor plan</strong> of your home showing all possible exits</li>
+        <li><strong>Mark two ways out</strong> of each room, including windows and doors</li>
+        <li><strong>Choose an outside meeting place</strong> a safe distance from your home</li>
+        <li><strong>Push the test button</strong> on your smoke alarm to start your drill</li>
+        <li><strong>Practice your escape plan</strong> at least twice a year, at night and during the day</li>
+      </ol>
+      <p>Remember: In a real fire, once you're out, stay out. Never go back inside a burning building.</p>
     `,
-    imageUrl: 'https://source.unsplash.com/random/800x600/?safety',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    imageUrl: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81',
+    videoUrl: 'https://www.youtube.com/embed/X9qcIZGX1ro',
     category: 'safety',
   },
+  {
+    id: 'ed4',
+    title: 'Fire Prevention at Home',
+    description: 'Simple steps to prevent fires in your home.',
+    content: `
+      <p>Most home fires are preventable with proper precautions and awareness.</p>
+      <h3>Kitchen Safety</h3>
+      <ul>
+        <li>Never leave cooking unattended</li>
+        <li>Keep flammable items away from the stove</li>
+        <li>Don't cook when sleepy or impaired</li>
+        <li>Keep a fire extinguisher in the kitchen</li>
+      </ul>
+      <h3>Electrical Safety</h3>
+      <ul>
+        <li>Don't overload outlets or extension cords</li>
+        <li>Replace damaged electrical cords immediately</li>
+        <li>Use appropriate wattage in light fixtures</li>
+        <li>Keep electrical appliances away from water</li>
+      </ul>
+      <h3>Heating Equipment</h3>
+      <ul>
+        <li>Keep space heaters at least 3 feet from anything flammable</li>
+        <li>Turn off portable heaters when leaving the room</li>
+        <li>Have furnaces inspected annually</li>
+        <li>Clean chimney flues regularly</li>
+      </ul>
+      <p>Regular maintenance of your Fire Guardian system ensures optimal performance and early detection of potential fire hazards.</p>
+    `,
+    imageUrl: 'https://images.unsplash.com/photo-1493397212122-2b85dda8106b',
+    videoUrl: 'https://www.youtube.com/embed/qmkdS-ZKA0Y',
+    category: 'safety',
+  },
+  {
+    id: 'ed5',
+    title: 'Chemistry of Combustion',
+    description: 'Understanding the science behind fire at the molecular level.',
+    content: `
+      <p>Combustion is a chemical reaction between fuel and oxygen that produces heat and light.</p>
+      <h3>The Fire Triangle</h3>
+      <p>Three elements must be present for a fire to occur:</p>
+      <ul>
+        <li><strong>Fuel:</strong> Any combustible material</li>
+        <li><strong>Oxygen:</strong> Typically from air (which is 21% oxygen)</li>
+        <li><strong>Heat:</strong> Enough energy to start and maintain the reaction</li>
+      </ul>
+      <h3>Combustion Process</h3>
+      <p>The chemical process of combustion follows these steps:</p>
+      <ol>
+        <li><strong>Heating:</strong> The fuel reaches its ignition temperature</li>
+        <li><strong>Decomposition:</strong> Complex molecules break down into simpler compounds</li>
+        <li><strong>Oxidation:</strong> Oxygen combines with decomposed fuel molecules</li>
+        <li><strong>Energy Release:</strong> Heat and light are produced</li>
+      </ol>
+      <h3>Types of Combustion</h3>
+      <ul>
+        <li><strong>Complete combustion:</strong> Occurs with plenty of oxygen, producing mainly carbon dioxide and water</li>
+        <li><strong>Incomplete combustion:</strong> Occurs with limited oxygen, producing carbon monoxide and soot</li>
+      </ul>
+      <p>Understanding these principles helps us design more effective fire detection and suppression systems.</p>
+    `,
+    imageUrl: 'https://images.unsplash.com/photo-1501854140801-50d01698950b',
+    videoUrl: 'https://www.youtube.com/embed/RQN6K5HqEa0',
+    category: 'physics',
+  },
+  {
+    id: 'ed6',
+    title: 'Advanced Fire Detection Technologies',
+    description: 'How modern systems like Fire Guardian use AI and IoT for early detection.',
+    content: `
+      <p>Fire Guardian Network utilizes cutting-edge technology to detect fires earlier and respond faster than conventional systems.</p>
+      <h3>Multi-Sensor Approach</h3>
+      <p>Our system combines multiple sensor types for comprehensive detection:</p>
+      <ul>
+        <li><strong>Heat sensors:</strong> Detect abnormal temperature changes</li>
+        <li><strong>Smoke particle analyzers:</strong> Identify airborne combustion particles</li>
+        <li><strong>Gas detectors:</strong> Monitor for carbon monoxide and other combustion gases</li>
+        <li><strong>Infrared sensors:</strong> Detect heat signatures characteristic of flames</li>
+      </ul>
+      <h3>Artificial Intelligence</h3>
+      <p>Our AI algorithms process data from all sensors to:</p>
+      <ul>
+        <li>Distinguish between normal cooking activity and dangerous fires</li>
+        <li>Recognize patterns that precede fire development</li>
+        <li>Continuously improve detection accuracy through machine learning</li>
+        <li>Reduce false alarms while increasing early detection rates</li>
+      </ul>
+      <h3>IoT Connectivity</h3>
+      <p>Internet of Things connectivity enables:</p>
+      <ul>
+        <li>Real-time alerts to homeowners and fire stations</li>
+        <li>Remote monitoring and system control</li>
+        <li>Automatic emergency responses</li>
+        <li>Integration with smart home systems</li>
+      </ul>
+      <p>This combination of technologies helps detect fires at the earliest possible stage, often before visible flames appear.</p>
+    `,
+    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475',
+    videoUrl: 'https://www.youtube.com/embed/8Tl0MMT9y_g',
+    category: 'technology',
+  }
 ];
 
 // Function to generate simulated sensor data (with random fluctuations)

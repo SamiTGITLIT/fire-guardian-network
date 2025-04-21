@@ -17,7 +17,8 @@ import {
   Info,
   AlertTriangle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Command
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -84,14 +85,17 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   
   // Determine which items to show based on user type
   const userItems = [
-    { icon: Home, label: 'Dashboard', to: '/' },
+    { icon: Home, label: 'Dashboard', to: '/dashboard' },
     { icon: BookOpen, label: 'Education', to: '/education' },
-    { icon: Map, label: 'Area Map', to: '/map' }
+    { icon: Bell, label: 'Notifications', to: '/notifications', badge: unreadCount },
+    { icon: Settings, label: 'Settings', to: '/settings' }
   ];
   
   const stationItems = [
     { icon: Home, label: 'Station Dashboard', to: '/station' },
-    { icon: Map, label: 'Area Map', to: '/map' }
+    { icon: Map, label: 'Map View', to: '/map' },
+    { icon: Bell, label: 'Alerts', to: '/station-notifications', badge: unreadCount },
+    { icon: Command, label: 'Commands', to: '/commands' }
   ];
   
   const navigationItems = isFireStation ? stationItems : userItems;
@@ -162,27 +166,13 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               label={item.label}
               to={item.to}
               active={isActive(item.to)}
+              badge={item.badge}
               collapsed={collapsed}
             />
           ))}
-          
-          <SidebarItem
-            icon={Bell}
-            label="Notifications"
-            to="#notifications"
-            badge={unreadCount}
-            collapsed={collapsed}
-          />
         </nav>
         
         <div className="mt-6 pt-6 border-t px-1">
-          <SidebarItem 
-            icon={Settings} 
-            label="Settings" 
-            to="#settings" 
-            collapsed={collapsed}
-          />
-          
           <SidebarItem 
             icon={Info} 
             label="Help & Support" 
@@ -195,7 +185,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors",
               "group"
             )}
-            onClick={logout}
+            onClick={() => logout()}
           >
             <LogOut className="h-5 w-5 group-hover:text-destructive transition-colors" />
             {!collapsed && <span>Logout</span>}
@@ -209,7 +199,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             variant="ghost" 
             size="icon"
             className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors"
-            onClick={logout}
+            onClick={() => logout()}
           >
             <LogOut className="h-4 w-4" />
           </Button>

@@ -9,8 +9,9 @@ import { motion } from 'framer-motion';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/context/AuthContext';
 import { User, FireExtinguisher } from 'lucide-react';
+import { users } from '@/data/mockData';
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -20,17 +21,19 @@ const LoginPage: React.FC = () => {
   const isStation = role === 'station';
   
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
-    password: ''
+    homeId: isStation ? '' : 'HOME-' + Math.floor(1000 + Math.random() * 9000),
+    stationId: isStation ? 'STATION-' + Math.floor(1000 + Math.random() * 9000) : ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.email) {
+    if (!formData.name || !formData.email) {
       toast({
         title: "Error",
-        description: "Please enter your email",
+        description: "Please fill out all required fields",
         variant: "destructive",
       });
       return;
@@ -45,7 +48,13 @@ const LoginPage: React.FC = () => {
       return;
     }
     
-    // Login logic - since this is a mock, we'll just use the hardcoded credentials
+    // Simulating registration success
+    toast({
+      title: "Registration successful",
+      description: `You've been registered as a ${isStation ? 'fire station' : 'user'}`,
+    });
+    
+    // Login the user after successful registration
     if (isStation) {
       login('fs1', true);
       navigate('/station');
@@ -53,11 +62,6 @@ const LoginPage: React.FC = () => {
       login('1', false);
       navigate('/dashboard');
     }
-    
-    toast({
-      title: "Login successful",
-      description: `Welcome to Fire Guardian Network`,
-    });
   };
 
   const container = {
@@ -92,16 +96,27 @@ const LoginPage: React.FC = () => {
                 <User className="w-8 h-8" />
               )}
             </div>
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
+            <CardTitle className="text-2xl">Create an account</CardTitle>
             <CardDescription>
-              Sign in to your {isStation ? 'fire station' : 'user'} account
+              Enter your information to register as a {isStation ? 'fire station' : 'user'}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input 
+                    id="name"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder={isStation ? "Fire Station Name" : "Your Full Name"}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
                   <Input 
                     id="email"
                     type="email"
@@ -112,31 +127,39 @@ const LoginPage: React.FC = () => {
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
-                    <Link to="#" className="text-xs text-muted-foreground hover:text-primary">
-                      Forgot password?
-                    </Link>
+                {!isStation && (
+                  <div className="space-y-2">
+                    <Label htmlFor="homeId">Home ID (Generated)</Label>
+                    <Input 
+                      id="homeId"
+                      value={formData.homeId}
+                      disabled
+                    />
+                    <p className="text-xs text-muted-foreground">Your unique home identifier</p>
                   </div>
-                  <Input 
-                    id="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
-                    placeholder="••••••••"
-                  />
-                </div>
+                )}
+                
+                {isStation && (
+                  <div className="space-y-2">
+                    <Label htmlFor="stationId">Station ID (Generated)</Label>
+                    <Input 
+                      id="stationId"
+                      value={formData.stationId}
+                      disabled
+                    />
+                    <p className="text-xs text-muted-foreground">Your unique station identifier</p>
+                  </div>
+                )}
 
-                <Button type="submit" className="w-full">Sign In</Button>
+                <Button type="submit" className="w-full">Register</Button>
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex justify-center">
             <div className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
-              <Link to="/register" state={{ role }} className="underline text-primary hover:text-primary/80">
-                Register
+              Already have an account?{" "}
+              <Link to="/login" state={{ role }} className="underline text-primary hover:text-primary/80">
+                Login
               </Link>
             </div>
           </CardFooter>
@@ -146,4 +169,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
