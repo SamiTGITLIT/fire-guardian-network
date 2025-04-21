@@ -15,8 +15,11 @@ import {
   Settings, 
   FireExtinguisher, 
   Info,
-  AlertTriangle 
+  AlertTriangle,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface SidebarItemProps {
   icon: React.ElementType;
@@ -24,6 +27,7 @@ interface SidebarItemProps {
   to: string;
   active?: boolean;
   badge?: number;
+  collapsed?: boolean;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ 
@@ -31,23 +35,32 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   label, 
   to, 
   active = false,
-  badge
+  badge,
+  collapsed = false
 }) => {
   return (
     <Link 
       to={to} 
       className={cn(
-        "flex items-center gap-3 px-3 py-2 rounded-md text-sm group transition-colors",
+        "flex items-center gap-3 px-3 py-2 rounded-md text-sm group transition-all duration-200",
         active 
           ? "bg-primary/10 text-primary font-medium" 
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
-      <Icon className="h-5 w-5" />
-      <span>{label}</span>
-      {badge !== undefined && badge > 0 && (
+      <Icon className={cn(
+        "h-5 w-5 transition-all duration-200",
+        active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+      )} />
+      {!collapsed && <span>{label}</span>}
+      {!collapsed && badge !== undefined && badge > 0 && (
         <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
           {badge > 99 ? '99+' : badge}
+        </span>
+      )}
+      {collapsed && badge !== undefined && badge > 0 && (
+        <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[8px] font-medium text-primary-foreground">
+          {badge > 9 ? '9+' : badge}
         </span>
       )}
     </Link>
@@ -83,16 +96,26 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   
   const navigationItems = isFireStation ? stationItems : userItems;
 
+  const sidebarVariants = {
+    expanded: { width: 240 },
+    collapsed: { width: 70 }
+  };
+
   return (
-    <div className={cn(
-      "h-screen flex flex-col border-r bg-card transition-all duration-300",
-      collapsed ? "w-[70px]" : "w-[240px]"
-    )}>
+    <motion.div 
+      className={cn(
+        "h-screen flex flex-col border-r bg-card shadow-md z-10",
+      )}
+      initial={collapsed ? "collapsed" : "expanded"}
+      animate={collapsed ? "collapsed" : "expanded"}
+      variants={sidebarVariants}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
       <div className="p-4 flex items-center justify-between border-b">
         {!collapsed && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-hidden">
             <FireExtinguisher className="h-6 w-6 text-fire" />
-            <span className="font-bold text-lg">Fire Guardian</span>
+            <span className="font-bold text-lg truncate">Fire Guardian</span>
           </div>
         )}
         
@@ -102,16 +125,14 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           </div>
         )}
         
-        {!collapsed && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8" 
-            onClick={onToggle}
-          >
-            <AlertTriangle className="h-4 w-4" />
-          </Button>
-        )}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-8 w-8 opacity-70 hover:opacity-100 transition-opacity"
+          onClick={onToggle}
+        >
+          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </Button>
       </div>
 
       {/* User info */}
@@ -141,6 +162,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               label={item.label}
               to={item.to}
               active={isActive(item.to)}
+              collapsed={collapsed}
             />
           ))}
           
@@ -149,6 +171,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             label="Notifications"
             to="#notifications"
             badge={unreadCount}
+            collapsed={collapsed}
           />
         </nav>
         
@@ -157,24 +180,42 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             icon={Settings} 
             label="Settings" 
             to="#settings" 
+            collapsed={collapsed}
           />
           
           <SidebarItem 
             icon={Info} 
             label="Help & Support" 
             to="#help" 
+            collapsed={collapsed}
           />
           
           <button
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors",
+              "group"
+            )}
             onClick={logout}
           >
-            <LogOut className="h-5 w-5" />
-            <span>{collapsed ? '' : 'Logout'}</span>
+            <LogOut className="h-5 w-5 group-hover:text-destructive transition-colors" />
+            {!collapsed && <span>Logout</span>}
           </button>
         </div>
       </div>
-    </div>
+
+      {collapsed && (
+        <div className="p-2 border-t flex justify-center">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors"
+            onClick={logout}
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+    </motion.div>
   );
 };
 

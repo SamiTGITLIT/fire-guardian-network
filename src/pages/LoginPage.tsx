@@ -19,6 +19,17 @@ const formSchema = z.object({
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
+const registerSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  confirmPassword: z.string(),
+  homeId: z.string().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
@@ -31,6 +42,17 @@ const LoginPage: React.FC = () => {
     defaultValues: {
       email: '',
       password: '',
+    },
+  });
+
+  const registerForm = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      homeId: '',
     },
   });
 
@@ -79,6 +101,29 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  const onRegister = async (data: z.infer<typeof registerSchema>) => {
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: 'Registration successful',
+        description: 'Your account has been created. You can now log in.',
+      });
+      setActiveTab('login');
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-background to-muted">
       <div className="flex items-center mb-8">
@@ -93,8 +138,8 @@ const LoginPage: React.FC = () => {
         className="w-full max-w-md"
       >
         <TabsList className="grid w-full grid-cols-2 mb-4">
-          <TabsTrigger value="login">Login</TabsTrigger>
-          <TabsTrigger value="register">Register</TabsTrigger>
+          <TabsTrigger value="login">Sign In</TabsTrigger>
+          <TabsTrigger value="register">Create Account</TabsTrigger>
         </TabsList>
         
         <Card className="border-none shadow-lg">
@@ -113,6 +158,7 @@ const LoginPage: React.FC = () => {
                     id="email"
                     placeholder="name@example.com"
                     {...register('email')}
+                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                   />
                   {errors.email && (
                     <p className="text-destructive text-sm">{errors.email.message}</p>
@@ -125,6 +171,7 @@ const LoginPage: React.FC = () => {
                     type="password"
                     placeholder="••••••••"
                     {...register('password')}
+                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                   />
                   {errors.password && (
                     <p className="text-destructive text-sm">{errors.password.message}</p>
@@ -132,13 +179,17 @@ const LoginPage: React.FC = () => {
                 </div>
 
                 <div className="text-sm text-muted-foreground">
-                  <p>For demo purposes, use:</p>
+                  <p>For verification purposes, use:</p>
                   <p>Email: john@example.com</p>
                   <p>Password: password123</p>
                 </div>
               </CardContent>
               <CardFooter className="flex-col space-y-4">
-                <Button className="w-full" type="submit" disabled={isLoading}>
+                <Button 
+                  className="w-full transition-all duration-200 hover:shadow-md" 
+                  type="submit" 
+                  disabled={isLoading}
+                >
                   {isLoading ? 'Signing in...' : 'Sign In'}
                 </Button>
                 <div className="text-center text-sm">
@@ -150,7 +201,7 @@ const LoginPage: React.FC = () => {
                     className="underline text-primary font-medium"
                     onClick={() => setActiveTab('register')}
                   >
-                    Register
+                    Create Account
                   </button>
                 </div>
               </CardFooter>
@@ -158,7 +209,7 @@ const LoginPage: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="register">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={registerForm.handleSubmit(onRegister)}>
               <CardHeader>
                 <CardTitle>Create an Account</CardTitle>
                 <CardDescription>
@@ -168,18 +219,36 @@ const LoginPage: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" placeholder="John Doe" />
+                  <Input 
+                    id="name" 
+                    placeholder="John Doe" 
+                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                    {...registerForm.register('name')}
+                  />
+                  {registerForm.formState.errors.name && (
+                    <p className="text-destructive text-sm">{registerForm.formState.errors.name.message}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     placeholder="name@example.com"
-                    {...register('email')}
+                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                    {...registerForm.register('email')}
                   />
-                  {errors.email && (
-                    <p className="text-destructive text-sm">{errors.email.message}</p>
+                  {registerForm.formState.errors.email && (
+                    <p className="text-destructive text-sm">{registerForm.formState.errors.email.message}</p>
                   )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="homeId">Home ID (Optional)</Label>
+                  <Input
+                    id="homeId"
+                    placeholder="Enter your home identifier if provided"
+                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                    {...registerForm.register('homeId')}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
@@ -187,10 +256,11 @@ const LoginPage: React.FC = () => {
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    {...register('password')}
+                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                    {...registerForm.register('password')}
                   />
-                  {errors.password && (
-                    <p className="text-destructive text-sm">{errors.password.message}</p>
+                  {registerForm.formState.errors.password && (
+                    <p className="text-destructive text-sm">{registerForm.formState.errors.password.message}</p>
                   )}
                 </div>
                 <div className="space-y-2">
@@ -199,11 +269,20 @@ const LoginPage: React.FC = () => {
                     id="confirm"
                     type="password"
                     placeholder="••••••••"
+                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                    {...registerForm.register('confirmPassword')}
                   />
+                  {registerForm.formState.errors.confirmPassword && (
+                    <p className="text-destructive text-sm">{registerForm.formState.errors.confirmPassword.message}</p>
+                  )}
                 </div>
               </CardContent>
               <CardFooter className="flex-col space-y-4">
-                <Button className="w-full" type="submit" disabled={isLoading}>
+                <Button 
+                  className="w-full transition-all duration-200 hover:shadow-md" 
+                  type="submit" 
+                  disabled={isLoading}
+                >
                   {isLoading ? 'Creating account...' : 'Create Account'}
                 </Button>
                 <div className="text-center text-sm">
@@ -224,34 +303,34 @@ const LoginPage: React.FC = () => {
         </Card>
       </Tabs>
 
-      <div className="mt-12 flex items-center gap-8">
+      <div className="mt-12 flex flex-col sm:flex-row items-center gap-8">
         <Button 
           variant="outline" 
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 group transition-all duration-300 hover:bg-primary/10"
           onClick={() => {
             login('1', false);
             navigate('/');
           }}
         >
-          <UserIcon className="h-4 w-4" />
-          <span>Demo User Login</span>
+          <UserIcon className="h-4 w-4 group-hover:text-primary transition-colors" />
+          <span>Homeowner Access</span>
         </Button>
         
         <Button 
           variant="outline" 
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 group transition-all duration-300 hover:bg-fire/10"
           onClick={() => {
             login('fs1', true);
             navigate('/station');
           }}
         >
-          <FireExtinguisher className="h-4 w-4" />
-          <span>Demo Station Login</span>
+          <FireExtinguisher className="h-4 w-4 group-hover:text-fire transition-colors" />
+          <span>Fire Station Access</span>
         </Button>
       </div>
 
       <footer className="mt-auto py-6 text-center text-sm text-muted-foreground">
-        <p>© 2023 Fire Guardian Network. All rights reserved.</p>
+        <p>© 2025 Fire Guardian Network. All rights reserved.</p>
       </footer>
     </div>
   );

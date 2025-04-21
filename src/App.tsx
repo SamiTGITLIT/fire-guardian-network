@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
@@ -25,9 +25,21 @@ const queryClient = new QueryClient();
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { currentUser, isFireStation } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const location = useLocation();
 
+  // Redirect to login if not authenticated
   if (!currentUser && !isFireStation) {
     return <Navigate to="/login" />;
+  }
+
+  // Redirect fire station users to station dashboard if trying to access user dashboard
+  if (isFireStation && location.pathname === '/') {
+    return <Navigate to="/station" />;
+  }
+
+  // Redirect regular users to user dashboard if trying to access station dashboard
+  if (!isFireStation && currentUser && location.pathname === '/station') {
+    return <Navigate to="/" />;
   }
 
   return (
@@ -62,22 +74,20 @@ const App = () => (
           <SensorProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter>
-              <Routes>
-                {/* Public routes */}
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                
-                {/* Protected routes */}
-                <Route path="/" element={<PrivateRoute element={<Index />} />} />
-                <Route path="/education" element={<PrivateRoute element={<Education />} />} />
-                <Route path="/station" element={<PrivateRoute element={<StationDashboard />} />} />
-                <Route path="/map" element={<PrivateRoute element={<MapView />} />} />
-                
-                {/* 404 route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              
+              {/* Protected routes */}
+              <Route path="/" element={<PrivateRoute element={<Index />} />} />
+              <Route path="/education" element={<PrivateRoute element={<Education />} />} />
+              <Route path="/station" element={<PrivateRoute element={<StationDashboard />} />} />
+              <Route path="/map" element={<PrivateRoute element={<MapView />} />} />
+              
+              {/* Redirect from root to home for unauthenticated users */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </SensorProvider>
         </NotificationProvider>
       </AuthProvider>

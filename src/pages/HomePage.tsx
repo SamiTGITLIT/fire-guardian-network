@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAutoLogin } from '@/context/AuthContext';
@@ -20,6 +20,7 @@ import {
 
 const HomePage: React.FC = () => {
   const { loginAsUser, loginAsFireStation } = useAutoLogin();
+  const navigate = useNavigate();
 
   const container = {
     hidden: { opacity: 0 },
@@ -34,6 +35,10 @@ const HomePage: React.FC = () => {
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 }
+  };
+
+  const handleLoginPage = () => {
+    navigate('/login');
   };
 
   return (
@@ -68,17 +73,17 @@ const HomePage: React.FC = () => {
                 <Button 
                   size="lg" 
                   className="bg-fire hover:bg-fire/90"
-                  onClick={loginAsUser}
+                  onClick={handleLoginPage}
                 >
-                  Home User Access
+                  Access Your Account
                 </Button>
                 <Button 
                   size="lg" 
                   variant="outline" 
                   className="border-fire text-fire hover:bg-fire/10"
-                  onClick={loginAsFireStation}
+                  onClick={() => navigate('#how-it-works')}
                 >
-                  Fire Station Portal
+                  Learn How It Works
                 </Button>
               </motion.div>
             </div>
@@ -113,7 +118,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 bg-muted/50">
+      <section className="py-16 bg-muted/50" id="how-it-works">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">How Fire Guardian Works</h2>
@@ -228,8 +233,8 @@ const HomePage: React.FC = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full" onClick={loginAsUser}>
-                    Enter Home Portal
+                  <Button className="w-full" onClick={handleLoginPage}>
+                    Access Home Portal
                   </Button>
                 </CardFooter>
               </Card>
@@ -274,9 +279,9 @@ const HomePage: React.FC = () => {
                 <CardFooter>
                   <Button 
                     className="w-full bg-fire hover:bg-fire/90"
-                    onClick={loginAsFireStation}
+                    onClick={handleLoginPage}
                   >
-                    Enter Station Portal
+                    Access Station Portal
                   </Button>
                 </CardFooter>
               </Card>
@@ -361,15 +366,34 @@ const HomePage: React.FC = () => {
             Get started with Fire Guardian Network today and experience peace of mind with advanced fire safety technology.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-fire hover:bg-fire/90" onClick={loginAsUser}>
+            <Button size="lg" className="bg-fire hover:bg-fire/90" onClick={handleLoginPage}>
               Get Started
             </Button>
-            <Button size="lg" variant="outline" onClick={() => window.location.href = '#how-it-works'}>
+            <Button size="lg" variant="outline" onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
               Learn More
             </Button>
           </div>
         </div>
       </section>
+
+      <footer className="bg-muted py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center mb-6 md:mb-0">
+              <FireExtinguisher className="h-8 w-8 text-fire mr-3" />
+              <span className="text-xl font-bold">Fire Guardian Network</span>
+            </div>
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms of Service</a>
+              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact Us</a>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-muted-foreground/10 text-center text-sm text-muted-foreground">
+            <p>© 2025 Fire Guardian Network. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
