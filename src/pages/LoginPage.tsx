@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
 import { users } from '@/data/mockData';
-import { FireExtinguisher, Shield } from 'lucide-react';
+import { FireExtinguisher, Shield, UserIcon } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -233,7 +233,7 @@ const LoginPage: React.FC = () => {
             navigate('/');
           }}
         >
-          <User className="h-4 w-4" />
+          <UserIcon className="h-4 w-4" />
           <span>Demo User Login</span>
         </Button>
         
